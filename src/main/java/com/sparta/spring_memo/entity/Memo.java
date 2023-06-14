@@ -16,6 +16,7 @@ public class Memo {
     private String title;
     private String username;
     private String contents;
+    private String password;
     private String date;
 
 
@@ -23,6 +24,7 @@ public class Memo {
         this.title = requestDto.getTitle();
         this.username = requestDto.getUsername();
         this.contents = requestDto.getContents();
+        this.password = requestDto.getPassword();
     }
 
     public  String timeNow() {
