@@ -53,4 +53,21 @@ public class MemoController {
 
         return responseDtoList;
     }
+
+
+    @GetMapping("/memos/{id}")
+    public MemoResponseDto getOneMemo (@PathVariable Long id) {
+
+        MemoResponseDto memoResponseDto;
+
+        if (memoList.containsKey(id)) {
+            Memo memo = memoList.get(id);
+            memoResponseDto = new MemoResponseDto(memo);
+
+            return memoResponseDto;
+        } else {
+            throw new IllegalArgumentException("선택한 메모는 존재하지 않습니다.");
+        }
+
+    }
 }
