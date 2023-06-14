@@ -41,7 +41,15 @@ public class MemoController {
         // stream() -> 앞의 values()를 for 문처럼 하나씩 돌려줌
         // stream()에 의해 하나씩 나오는 객체는 memo
         // 그 memo를 하나의 MemoResponseDto 로 만들어줌
-        List<MemoResponseDto> responseDtoList = memoList.values().stream().map(MemoResponseDto::new).toList();
+        List<MemoResponseDto> responseDtoList = new ArrayList<>(memoList.values().stream().map(MemoResponseDto::new).toList());
+
+        // 시간 기준으로 내림차순 정렬
+        responseDtoList.sort((o1, o2) -> o2.getDate().compareTo(o1.getDate()));
+        // 시간 순으로 id 새로 부여
+//        long i = 0;
+//        for(MemoResponseDto m : responseDtoList){
+//            m.setId(++i);
+//        }
 
         return responseDtoList;
     }
