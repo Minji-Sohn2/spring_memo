@@ -17,7 +17,8 @@ public class Memo {
     private String username;
     private String contents;
     private String password;
-    private String date;
+    private String createdAt;
+    private String modifiedAt;
 
 
     public Memo(MemoRequestDto requestDto) {
@@ -25,11 +26,6 @@ public class Memo {
         this.username = requestDto.getUsername();
         this.contents = requestDto.getContents();
         this.password = requestDto.getPassword();
-    }
-
-    public  String timeNow() {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd h:mm:ss");
-        return dateTimeFormatter.format(LocalDateTime.now());
     }
 
     public void update(MemoRequestDto memoRequestDto) {

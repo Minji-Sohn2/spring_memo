@@ -5,6 +5,8 @@ import com.sparta.spring_memo.dto.MemoResponseDto;
 import com.sparta.spring_memo.entity.Memo;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @RestController
@@ -24,7 +26,7 @@ public class MemoController {
         memo.setId(maxID);
 
         // 받아온 시각 설정
-        memo.setDate(memo.timeNow());
+        memo.setCreatedAt(timeNow());
 
         // id를 key 값으로 가지도록 리스트에 추가
         memoList.put(memo.getId(), memo);
@@ -44,7 +46,7 @@ public class MemoController {
         List<MemoResponseDto> responseDtoList = new ArrayList<>(memoList.values().stream().map(MemoResponseDto::new).toList());
 
         // 시간 기준으로 내림차순 정렬
-        responseDtoList.sort((o1, o2) -> o2.getDate().compareTo(o1.getDate()));
+        responseDtoList.sort((o1, o2) -> o2.getCreatedAt().compareTo(o1.getCreatedAt()));
         // 시간 순으로 id 새로 부여
 //        long i = 0;
 //        for(MemoResponseDto m : responseDtoList){
@@ -73,24 +75,46 @@ public class MemoController {
 
 
     @PutMapping("/memos/{id}")
-    public Long updateMemo(@PathVariable Long id, @RequestBody MemoRequestDto memoRequestDto) {
+    public Long updateMemo(@PathVariable Long id, @RequestBody MemoRequestDto memoRequestDto, @RequestBody String password) {
         if (memoList.containsKey(id)) {
+
             Memo memo = memoList.get(id);
 
-            memo.update(memoRequestDto);
-            return memo.getId();
+            if(password.equals(memo.getPassword())){
+                memo.setModifiedAt(timeNow());
+                memo.update(memoRequestDto);
+                return memo.getId();
+            }else{
+                throw new IllegalArgumentException("비밀번호가 틀렸습니다.");
+            }
+
         } else {
             throw new IllegalArgumentException("선택한 메모는 존재하지 않습니다.");
         }
     }
 
     @DeleteMapping("/memos/{id}")
-    public Long deleteMemo(@PathVariable Long id) {
+    public Long deleteMemo(@PathVariable Long id, @RequestBody String password) {
         if (memoList.containsKey(id)) {
-            memoList.remove(id);
-            return id;
+
+            Memo memo = memoList.get(id);
+
+            if(password.equals(memo.getPassword())){
+                memoList.remove(id);
+                return id;
+            }else {
+                throw new IllegalArgumentException("비밀번호가 틀렸습니다.");
+            }
+
         } else {
             throw new IllegalArgumentException("선택한 메모는 존재하지 않습니다.");
         }
     }
+
+    // create, update 시각 설정
+    private String timeNow() {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd h:mm:ss");
+        return dateTimeFormatter.format(LocalDateTime.now());
+    }
+
 }
