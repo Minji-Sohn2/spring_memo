@@ -31,4 +31,11 @@ public class Memo {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd h:mm:ss");
         return dateTimeFormatter.format(LocalDateTime.now());
     }
+
+    public void update(MemoRequestDto memoRequestDto) {
+        this.title = memoRequestDto.getTitle();
+        this.username = memoRequestDto.getUsername();
+        this.contents = memoRequestDto.getContents();
+        this.password = memoRequestDto.getPassword();
+    }
 }

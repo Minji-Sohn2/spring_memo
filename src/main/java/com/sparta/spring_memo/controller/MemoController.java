@@ -15,12 +15,12 @@ public class MemoController {
     private final Map<Long, Memo> memoList = new HashMap<>();
 
     @PostMapping("/memos")
-    public MemoResponseDto createMemo(@RequestBody MemoRequestDto requestDto){
+    public MemoResponseDto createMemo(@RequestBody MemoRequestDto requestDto) {
 
         Memo memo = new Memo(requestDto);
 
         // 현재 리스트가 비어있다면 (id = 1), 아니라면 (id = 마지막 id 값 + 1)
-        Long maxID = memoList.size()>0? Collections.max(memoList.keySet())+1 : 1;
+        Long maxID = memoList.size() > 0 ? Collections.max(memoList.keySet()) + 1 : 1;
         memo.setId(maxID);
 
         // 받아온 시각 설정
@@ -36,7 +36,7 @@ public class MemoController {
 
 
     @GetMapping("/memos")
-    public List<MemoResponseDto> getMemos(){
+    public List<MemoResponseDto> getMemos() {
         // Map to List
         // stream() -> 앞의 values()를 for 문처럼 하나씩 돌려줌
         // stream()에 의해 하나씩 나오는 객체는 memo
@@ -56,7 +56,7 @@ public class MemoController {
 
 
     @GetMapping("/memos/{id}")
-    public MemoResponseDto getOneMemo (@PathVariable Long id) {
+    public MemoResponseDto getOneMemo(@PathVariable Long id) {
 
         MemoResponseDto memoResponseDto;
 
@@ -69,5 +69,28 @@ public class MemoController {
             throw new IllegalArgumentException("선택한 메모는 존재하지 않습니다.");
         }
 
+    }
+
+
+    @PutMapping("/memos/{id}")
+    public Long updateMemo(@PathVariable Long id, @RequestBody MemoRequestDto memoRequestDto) {
+        if (memoList.containsKey(id)) {
+            Memo memo = memoList.get(id);
+
+            memo.update(memoRequestDto);
+            return memo.getId();
+        } else {
+            throw new IllegalArgumentException("선택한 메모는 존재하지 않습니다.");
+        }
+    }
+
+    @DeleteMapping("/memos/{id}")
+    public Long deleteMemo(@PathVariable Long id) {
+        if (memoList.containsKey(id)) {
+            memoList.remove(id);
+            return id;
+        } else {
+            throw new IllegalArgumentException("선택한 메모는 존재하지 않습니다.");
+        }
     }
 }
