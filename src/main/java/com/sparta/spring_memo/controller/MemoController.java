@@ -75,15 +75,17 @@ public class MemoController {
 
 
     @PutMapping("/memos/{id}")
-    public Long updateMemo(@PathVariable Long id, @RequestBody MemoRequestDto memoRequestDto, @RequestBody String password) {
+    public MemoResponseDto updateMemo(@PathVariable Long id, @RequestBody MemoRequestDto memoRequestDto, @RequestBody String password) {
         if (memoList.containsKey(id)) {
 
+            MemoResponseDto memoResponseDto;
             Memo memo = memoList.get(id);
 
             if(password.equals(memo.getPassword())){
                 memo.setModifiedAt(timeNow());
                 memo.update(memoRequestDto);
-                return memo.getId();
+                memoResponseDto = new MemoResponseDto(memo);
+                return memoResponseDto;
             }else{
                 throw new IllegalArgumentException("비밀번호가 틀렸습니다.");
             }
