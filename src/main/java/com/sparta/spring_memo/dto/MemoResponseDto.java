@@ -20,4 +20,13 @@ public class MemoResponseDto {
         this.createdAt = memo.getCreatedAt();
         this.modifiedAt = memo.getModifiedAt();
     }
+
+    public MemoResponseDto(Long id, String username, String contents, String title, String createdAt, String modifiedAt) {
+        this.id = id;
+        this.username = username;
+        this.contents = contents;
+        this.title = title;
+        this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
+    }
 }
