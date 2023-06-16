@@ -27,9 +27,7 @@ public class MemoRepository {
     public Memo save(Memo memo) {
         KeyHolder keyHolder = new GeneratedKeyHolder(); // 기본 키를 반환받기 위한 객체
 
-        memo.setCreatedAt(timeNow());
-
-        String sql = "INSERT INTO memo (username, contents, title, password, createdAt) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO memo (username, contents, title, password) VALUES (?, ?, ?, ?)";
         jdbcTemplate.update(con -> {
                     PreparedStatement preparedStatement = con.prepareStatement(sql,
                             Statement.RETURN_GENERATED_KEYS);
@@ -38,7 +36,6 @@ public class MemoRepository {
                     preparedStatement.setString(2, memo.getContents());
                     preparedStatement.setString(3, memo.getTitle());
                     preparedStatement.setString(4, memo.getPassword());
-                    preparedStatement.setString(5, memo.getCreatedAt());
                     return preparedStatement;
                 },
                 keyHolder);
@@ -87,12 +84,6 @@ public class MemoRepository {
 
         String sql = "DELETE FROM memo WHERE id = ?";
         jdbcTemplate.update(sql, id);
-    }
-
-    // create, update 시각 설정
-    private String timeNow() {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd h:mm:ss");
-        return dateTimeFormatter.format(LocalDateTime.now());
     }
 
     public Memo findById(Long id) {
