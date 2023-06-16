@@ -12,8 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+
 import java.util.List;
 
 public class MemoRepository {
@@ -27,14 +26,14 @@ public class MemoRepository {
     public Memo save(Memo memo) {
         KeyHolder keyHolder = new GeneratedKeyHolder(); // 기본 키를 반환받기 위한 객체
 
-        String sql = "INSERT INTO memo (username, contents, title, password) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO memo (title, username, contents, password) VALUES (?, ?, ?, ?)";
         jdbcTemplate.update(con -> {
                     PreparedStatement preparedStatement = con.prepareStatement(sql,
                             Statement.RETURN_GENERATED_KEYS);
 
-                    preparedStatement.setString(1, memo.getUsername());
-                    preparedStatement.setString(2, memo.getContents());
-                    preparedStatement.setString(3, memo.getTitle());
+                    preparedStatement.setString(1, memo.getTitle());
+                    preparedStatement.setString(2, memo.getUsername());
+                    preparedStatement.setString(3, memo.getContents());
                     preparedStatement.setString(4, memo.getPassword());
                     return preparedStatement;
                 },
